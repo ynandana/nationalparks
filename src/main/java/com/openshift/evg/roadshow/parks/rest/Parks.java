@@ -2,6 +2,7 @@ package com.openshift.evg.roadshow.parks.rest;
 
 import com.mongodb.BasicDBObject;
 import com.openshift.evg.roadshow.parks.db.MongoDBConnection;
+import com.openshift.evg.roadshow.parks.db.postgre.PostgreDBConnection;
 import com.openshift.evg.roadshow.parks.model.Park;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,12 @@ import java.util.List;
 @RestController
 public class Parks {
 
-    private final MongoDBConnection con;
+    //private final MongoDBConnection con;
+    private final PostgreDBConnection con;
 
 
     @Autowired
-    public Parks(MongoDBConnection connection) {
+    public Parks(PostgreDBConnection connection) {
         this.con = connection;
     }
 
@@ -27,8 +29,7 @@ public class Parks {
     @RequestMapping(method = RequestMethod.GET, value = "/load", produces = "application/json")
     public String load() {
         System.out.println("[INFO] load()");
-        List<Document> l = con.loadParks();
-        con.init(l);
+        con.loadParks();
         return "Items inserted in database: " + con.sizeInDB();
     }
 
@@ -52,16 +53,8 @@ public class Parks {
         // make the query object
         BasicDBObject spatialQuery = new BasicDBObject();
 
-        ArrayList<double[]> boxList = new ArrayList<double[]>();
-        boxList.add(new double[]{new Float(lat1), new Float(lon1)});
-        boxList.add(new double[]{new Float(lat2), new Float(lon2)});
-
-        BasicDBObject boxQuery = new BasicDBObject();
-        boxQuery.put("$box", boxList);
-
-        spatialQuery.put("coordinates", new BasicDBObject("$within", boxQuery));
-        System.out.println("Using spatial query: " + spatialQuery.toString());
-
+        List<Park> parks = con.findParksWithin(lat1,lon1,lat2,lon2);
+        
         return con.getByQuery(spatialQuery);
     }
 

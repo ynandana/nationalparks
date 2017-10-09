@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Park {
 
     @Id
-    private ObjectId id;
+    private Integer id;
 
     private Object toponymName;
     private Object name;
@@ -26,7 +26,7 @@ public class Park {
     public Park() {
     }
 
-    public Park(ObjectId id, Object name) {
+    public Park(Integer id, Object name) {
         this.id = id;
         this.name = name;
     }
@@ -87,11 +87,11 @@ public class Park {
         this.countryName = countryName;
     }
 
-    public ObjectId getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

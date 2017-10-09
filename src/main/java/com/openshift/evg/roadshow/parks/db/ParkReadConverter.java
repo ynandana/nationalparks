@@ -20,8 +20,7 @@ public class ParkReadConverter implements Converter<DBObject, Park> {
 
 
     public Park convert(DBObject source) {
-        Park park = new Park((ObjectId) source.get("_id"),
-                (String) source.get("name"));
+        Park park = new Park();
         park.setToponymName((String) source.get("toponymName"));
 
         Coordinates cord = new Coordinates((List) source.get("coordinates"));
@@ -35,8 +34,7 @@ public class ParkReadConverter implements Converter<DBObject, Park> {
     }
 
     public static final Park convert(Document source) {
-        Park park = new Park((ObjectId) source.get("_id"),
-                (String) source.get("name"));
+        Park park = new Park();
         park.setToponymName((String) source.get("toponymName"));
 
         Coordinates cord = new Coordinates((List) source.get("coordinates"));
