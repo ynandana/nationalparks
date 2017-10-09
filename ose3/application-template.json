@@ -2,7 +2,7 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "nationalparks",
+    "name": "nationalparks-postgre",
     "annotations": {
       "iconClass": "icon-java",
       "description": "Application template NationalParks backend running on SpringBoot and using mongodb",
@@ -27,17 +27,31 @@
       "name": "APPLICATION_HOSTNAME"
     },
     {
-      "description": "The name for the mongodb application.",
-      "displayName": "Mongodb App",
-      "name": "MONGODB_APPLICATION_NAME",
-      "value": "mongodb",
+      "description": "URL of Postgre Database",
+      "displayName": "Postgre URL",
+      "name": "POSTGRE_URL",
+      "value": "jdbc:postgresql://192.168.199.100:5432/parksmap",
+      "required": true
+    },
+    {
+      "description": "Username of Postgre Database",
+      "displayName": "Postgre username",
+      "name": "POSTGRE_USERNAME",
+      "value": "parksmap",
+      "required": true
+    },
+    {
+      "description": "Password of Postgre Database",
+      "displayName": "Postgre password",
+      "name": "POSTGRE_PASSWORD",
+      "value": "",
       "required": true
     },
     {
       "description": "Git source URI for application",
       "displayName": "Git source repository",
       "name": "GIT_URI",
-      "value": "https://github.com/openshift-roadshow/nationalparks.git",
+      "value": "https://github.com/adithaha/nationalparks.git",
       "required": true
     },
     {
@@ -52,46 +66,6 @@
       "displayName": "Maven mirror url",
       "name": "MAVEN_MIRROR_URL",
       "required": false
-    },
-    {
-      "description": "Database name",
-      "displayName": "Database name",
-      "name": "MONGODB_DATABASE",
-      "value": "mongodb",
-      "required": true
-    },
-    {
-      "description": "Disable data file preallocation.",
-      "name": "MONGODB_NOPREALLOC"
-    },
-    {
-      "description": "Set MongoDB to use a smaller default data file size.",
-      "name": "MONGODB_SMALLFILES"
-    },
-    {
-      "description": "Runs MongoDB in a quiet mode that attempts to limit the amount of output.",
-      "name": "MONGODB_QUIET"
-    },
-    {
-      "description": "Database user name",
-      "displayName": "Database user name",
-      "name": "MONGODB_USER",
-      "value": "mongodb",
-      "required": true
-    },
-    {
-      "description": "Database user password",
-      "displayName": "Database user password",
-      "name": "MONGODB_PASSWORD",
-      "value": "mongodb",
-      "required": true
-    },
-    {
-      "description": "Database admin password",
-      "displayName": "Database admin password",
-      "name": "MONGODB_ADMIN_PASSWORD",
-      "value": "mongodb",
-      "required": true
     },
     {
       "description": "Github trigger secret",
@@ -127,173 +101,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "kind": "Service",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "${MONGODB_APPLICATION_NAME}",
-        "labels": {
-          "component": "${MONGODB_APPLICATION_NAME}"
-        }
-      },
-      "spec": {
-        "ports": [
-          {
-            "name": "mongo",
-            "protocol": "TCP",
-            "port": 27017,
-            "targetPort": 27017
-          }
-        ],
-        "selector": {
-          "name": "${MONGODB_APPLICATION_NAME}"
-        },
-        "type": "ClusterIP",
-        "sessionAffinity": "None"
-      }
-    },
-    {
-      "kind": "DeploymentConfig",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "${MONGODB_APPLICATION_NAME}",
-        "labels": {
-          "component": "${MONGODB_APPLICATION_NAME}"
-        }
-      },
-      "spec": {
-        "strategy": {
-          "type": "Recreate",
-          "recreateParams": {
-            "timeoutSeconds": 600
-          },
-          "resources": {}
-        },
-        "triggers": [
-          {
-            "type": "ImageChange",
-            "imageChangeParams": {
-              "automatic": true,
-              "containerNames": [
-                "${MONGODB_APPLICATION_NAME}"
-              ],
-              "from": {
-                "kind": "ImageStreamTag",
-                "namespace": "openshift",
-                "name": "mongodb:3.2"
-              }
-            }
-          },
-          {
-            "type": "ConfigChange"
-          }
-        ],
-        "replicas": 1,
-        "test": false,
-        "selector": {
-          "name": "${MONGODB_APPLICATION_NAME}"
-        },
-        "template": {
-          "metadata": {
-            "labels": {
-              "name": "${MONGODB_APPLICATION_NAME}"
-            }
-          },
-          "spec": {
-            "volumes": [
-              {
-                "name": "mongodb-data",
-                "emptyDir": {}
-              }
-            ],
-            "containers": [
-              {
-                "name": "${MONGODB_APPLICATION_NAME}",
-                "image": "${MONGODB_APPLICATION_NAME}",
-                "ports": [
-                  {
-                    "containerPort": 27017,
-                    "protocol": "TCP"
-                  }
-                ],
-                "env": [
-                  {
-                    "name": "KUBERNETES_NAMESPACE",
-                    "valueFrom": {
-                      "fieldRef": {
-                        "fieldPath": "metadata.namespace"
-                      }
-                    }
-                  },
-                  {
-                    "name": "MONGODB_USER",
-                    "value":"${MONGODB_USER}"
-                  },
-                  {
-                    "name": "MONGODB_PASSWORD",
-                    "value":"${MONGODB_PASSWORD}"
-                  },
-                  {
-                    "name": "MONGODB_DATABASE",
-                    "value":"${MONGODB_DATABASE}"
-                  },
-                  {
-                    "name": "MONGODB_ADMIN_PASSWORD",
-                    "value": "${MONGODB_ADMIN_PASSWORD}"
-                  }
-                ],
-                "resources": {
-                  "limits": {
-                    "memory": "512Mi"
-                  }
-                },
-                "volumeMounts": [
-                  {
-                    "name": "mongodb-data",
-                    "mountPath": "/var/lib/mongodb/data"
-                  }
-                ],
-                "livenessProbe": {
-                  "tcpSocket": {
-                    "port": 27017
-                  },
-                  "initialDelaySeconds": 30,
-                  "timeoutSeconds": 1,
-                  "periodSeconds": 10,
-                  "successThreshold": 1,
-                  "failureThreshold": 3
-                },
-                "readinessProbe": {
-                  "exec": {
-                    "command": [
-                      "/bin/sh",
-                      "-i",
-                      "-c",
-                      "mongo 127.0.0.1:27017/$MONGODB_DATABASE -u $MONGODB_USER -p $MONGODB_PASSWORD --eval=\"quit()\""
-                    ]
-                  },
-                  "initialDelaySeconds": 3,
-                  "timeoutSeconds": 1,
-                  "periodSeconds": 10,
-                  "successThreshold": 1,
-                  "failureThreshold": 3
-                },
-                "terminationMessagePath": "/dev/termination-log",
-                "imagePullPolicy": "IfNotPresent",
-                "securityContext": {
-                  "capabilities": {},
-                  "privileged": false
-                }
-              }
-            ],
-            "restartPolicy": "Always",
-            "terminationGracePeriodSeconds": 30,
-            "dnsPolicy": "ClusterFirst",
-            "securityContext": {}
-          }
-        }
       }
     },
     {
@@ -460,21 +267,17 @@
                     }
                   },
                   {
-                    "name": "MONGODB_USERNAME",
-                    "value": "${MONGODB_USER}"
+                    "name": "POSTGRE_URL",
+                    "value": "${POSTGRE_URL}"
                   },
                   {
-                    "name": "MONGODB_PASSWORD",
-                    "value": "${MONGODB_PASSWORD}"
+                    "name": "POSTGRE_USERNAME",
+                    "value": "${POSTGRE_USERNAME}"
                   },
                   {
-                    "name": "MONGODB_DATABASE",
-                    "value": "${MONGODB_DATABASE}"
-                  },
-                  {
-                    "name": "MONGODB_SERVER_HOST",
-                    "value": "${MONGODB_APPLICATION_NAME}"
-                  }
+                    "name": "POSTGRE_PASSWORD",
+                    "value": "${POSTGRE_PASSWORD}"
+                  }    
                 ],
                 "resources": {},
                 "livenessProbe": {
