@@ -5,12 +5,12 @@
     "name": "nationalparks-postgre",
     "annotations": {
       "iconClass": "icon-java",
-      "description": "Application template NationalParks backend running on SpringBoot and using mongodb",
-      "tags": "roadshow,springboot,roadshow-backend,java,mongodb"
+      "description": "Application template NationalParks backend running on SpringBoot and using external Postgre DB",
+      "tags": "roadshow,springboot,roadshow-backend,java,postgredb"
     }
   },
   "labels": {
-    "application": "nationalparks",
+    "application": "nationalparks-postgre",
     "createdBy": "nationalparks-template"
   },
   "parameters": [
