@@ -29,6 +29,7 @@ public class Parks {
     @RequestMapping(method = RequestMethod.GET, value = "/load", produces = "application/json")
     public String load() {
         System.out.println("[INFO] load()");
+        con.createParksTable();
         con.loadParks();
         return "Items inserted in database: " + con.sizeInDB();
     }

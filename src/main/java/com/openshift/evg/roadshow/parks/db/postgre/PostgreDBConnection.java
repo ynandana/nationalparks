@@ -92,11 +92,6 @@ public class PostgreDBConnection {
                 JacksonJsonParser parser = new JacksonJsonParser();
             	Map<String, Object> data = parser.parseMap(s);
                 
-            	for (Map.Entry<String, Object> entry : data.entrySet()) {
-        			System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue() + " type : " + entry.getValue().getClass().getName());
-        		}
-            	
-            	
             	Object[] obj = {	data.get("countryCode"),
 			            			data.get("countryName"),
 			            			data.get("name"),
@@ -122,6 +117,34 @@ public class PostgreDBConnection {
                 System.out.println("Error loading parks. Return empty list");
             }
         }
+    }
+    
+    public void createParksTable() {
+        System.out.println("[DEBUG] MongoDBConnection.createParksTable()");
+
+        try {
+        	String sql = "drop table if exists park";
+        	
+        	jdbcTemplate.execute(sql);
+        	
+        	sql = "CREATE TABLE park " +
+					"( " +
+					    "id serial NOT NULL , " +
+					    "country_code character varying(2) NOT NULL, " +
+					    "country_name character varying(50) NOT NULL, " +
+					    "name character varying(200) NOT NULL, " +
+					    "toponym_name character varying(200) NOT NULL, " +
+					    "latitude double precision NOT NULL, " +
+					    "longitude double precision NOT NULL, " +
+					    "CONSTRAINT park_pkey PRIMARY KEY (id) " +
+					"); ";
+        	
+        	jdbcTemplate.execute(sql);
+                
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error creating parks table." + e.getMessage());
+        } 
     }
 
 

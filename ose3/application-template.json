@@ -27,22 +27,36 @@
       "name": "APPLICATION_HOSTNAME"
     },
     {
-      "description": "URL of Postgre Database",
-      "displayName": "Postgre URL",
-      "name": "POSTGRE_URL",
-      "value": "jdbc:postgresql://192.168.199.100:5432/parksmap",
+      "description": "Postgre host",
+      "displayName": "Postgre Host",
+      "name": "POSTGRE_HOST",
+      "value": "192.168.199.100",
       "required": true
     },
     {
-      "description": "Username of Postgre Database",
-      "displayName": "Postgre username",
+      "description": "Postgre port",
+      "displayName": "Postgre Port",
+      "name": "POSTGRE_PORT",
+      "value": "5432",
+      "required": true
+    },
+    {
+      "description": "Postgre DB name",
+      "displayName": "Postgre DB Name",
+      "name": "POSTGRE_DB_NAME",
+      "value": "parksmap",
+      "required": true
+    },
+    {
+      "description": "Postgre username",
+      "displayName": "Postgre Username",
       "name": "POSTGRE_USERNAME",
       "value": "parksmap",
       "required": true
     },
     {
-      "description": "Password of Postgre Database",
-      "displayName": "Postgre password",
+      "description": "Postgre password",
+      "displayName": "Postgre Password",
       "name": "POSTGRE_PASSWORD",
       "value": "",
       "required": true
@@ -267,8 +281,16 @@
                     }
                   },
                   {
-                    "name": "POSTGRE_URL",
-                    "value": "${POSTGRE_URL}"
+                    "name": "POSTGRE_HOST",
+                    "value": "${POSTGRE_HOST}"
+                  },
+                  {
+                    "name": "POSTGRE_PORT",
+                    "value": "${POSTGRE_PORT}"
+                  },
+                  {
+                    "name": "POSTGRE_DB_NAME",
+                    "value": "${POSTGRE_DB_NAME}"
                   },
                   {
                     "name": "POSTGRE_USERNAME",
