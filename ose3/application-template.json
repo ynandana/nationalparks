@@ -30,7 +30,7 @@
       "description": "Postgre host",
       "displayName": "Postgre Host",
       "name": "POSTGRE_HOST",
-      "value": "192.168.199.100",
+      "value": "10.197.23.30",
       "required": true
     },
     {
@@ -58,7 +58,7 @@
       "description": "Postgre password",
       "displayName": "Postgre Password",
       "name": "POSTGRE_PASSWORD",
-      "value": "",
+      "value": "parksmap",
       "required": true
     },
     {
